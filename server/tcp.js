@@ -10,9 +10,11 @@ class Server extends tcp.Server {
     this.on('connection', this.handle.bind(this));
   }
   async handle(client) {
-    const data = await Packet.readStream(client);
-    const message = Packet.parse(data);
-    this.emit('request', message, this.response.bind(this, client), client);
+    try {
+      const data = await Packet.readStream(client);
+      const message = Packet.parse(data);
+      this.emit('request', message, this.response.bind(this, client), client);
+    } catch {}
   }
   response(client, message) {
     if (message instanceof Packet)
